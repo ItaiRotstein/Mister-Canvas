@@ -3,8 +3,12 @@
 let gElCanvas
 let gCtx
 let gCurrShape = 'squares'
-let gColor = '#000000'
+let gStrokeColor = '#000000'
+let gFillColor = '#FFFFFF'
+let gLineWidth = 10
+let gLength = 10
 let gIsClicked = false
+let gIsFill = false
 const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 
 function init() {
@@ -50,33 +54,57 @@ function onMove(ev) {
     draw(pos.x, pos.y)
 }
 
-function onUp(ev) {
+function onUp() {
     gIsClicked = false
 
 }
+function drawLines(x, y) {
+    gCtx.beginPath()
+    gCtx.moveTo(x, y)
+    gCtx.lineTo(x + gLength, y + gLength)
+    gCtx.lineTo(x - gLength, y + gLength)
+    gCtx.lineTo(x, y)
+    gCtx.strokeStyle = gStrokeColor
+    gCtx.stroke()
+    gCtx.fillStyle = gFillColor
+    gCtx.fill()
+    gCtx.closePath()
+}
 
 function drawSquares(x, y) {
-    gCtx.rect(x, y, 50, 50)
-    // gCtx.fillStyle = gColor
-    // gCtx.fillRect(x, y, 50, 50)
-    gCtx.strokeStyle = gColor
-    gCtx.stroke()
-}
-
-function drawCircles(x, y, size = 60) {
+    gCtx.lineWidth = gLineWidth
     gCtx.beginPath()
-    gCtx.arc(x, y, size, 0, 2 * Math.PI)
-    gCtx.strokeStyle = gColor
+    gCtx.rect(x, y, gLength, gLength)
+    gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
+    gCtx.fillStyle = gFillColor
+    gCtx.fillRect(x, y, gLength, gLength)
+    gCtx.closePath()
 }
 
-function drawTriangles(x, y, length = 50) {
-    gCtx.moveTo(x, y)
-    gCtx.lineTo(x + length, y + length)
-    gCtx.lineTo(x - length, y + length)
-    gCtx.lineTo(x, y)
-    gCtx.strokeStyle = gColor
+function drawCircles(x, y) {
+    gCtx.lineWidth = gLineWidth
+    gCtx.beginPath()
+    gCtx.arc(x, y, gLength, 0, 2 * Math.PI)
+    gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
+    gCtx.fillStyle = gFillColor
+    gCtx.fill()
+    gCtx.closePath()
+}
+
+function drawTriangles(x, y) {
+    gCtx.lineWidth = gLineWidth
+    gCtx.beginPath()
+    gCtx.moveTo(x, y)
+    gCtx.lineTo(x + gLength, y + gLength)
+    gCtx.lineTo(x - gLength, y + gLength)
+    gCtx.lineTo(x, y)
+    gCtx.strokeStyle = gStrokeColor
+    gCtx.stroke()
+    gCtx.fillStyle = gFillColor
+    gCtx.fill()
+    gCtx.closePath()
 }
 
 
@@ -117,9 +145,63 @@ function draw(x, y) {
         case 'triangles':
             drawTriangles(x, y)
             break
+        case 'lines':
+            drawLines(x, y)
+            break
     }
 }
 
-function onSetColor(color) {
-    gColor = color
+function onSetLineWidth(width) {
+    gLineWidth = width
+}
+
+function onSetLineLength(length) {
+    gLength = length
+}
+
+function onSetStrokeColor(color) {
+    gStrokeColor = color
+}
+
+function onSetFillColor(color) {
+    gFillColor = color
+}
+
+function onSetIsFill() {
+    if (!gIsFill) gIsFill = true
+    else gIsFill = false
+    console.log(gIsFill);
+}
+
+function onClearCanvas() {
+    gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
+}
+
+function downloadCanvas(elLink) {
+    const data = gElCanvas.toDataURL()
+    elLink.href = data
+    elLink.download = 'my_canvas.jpg'
+}
+
+function onImgInput(ev) {
+    loadImageFromInput(ev, renderImg)
+}
+
+function loadImageFromInput(ev, onImageReady) {
+    document.querySelector('.share-container').innerHTML = ''
+    var reader = new FileReader()
+
+    reader.onload = (event) => {
+        console.log('onload');
+        var img = new Image()
+        // Render on canvas
+        img.src = event.target.result
+        img.onload = onImageReady.bind(null, img)
+    }
+    console.log('after');
+    reader.readAsDataURL(ev.target.files[0])
+}
+
+function renderImg(img) {
+    gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height);
 }

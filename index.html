@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,31 +8,85 @@
     <title>Mister Canvas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body onload="init()">
 
-     
+
 
 
     <h1>Mister-Canvas</h1>
+    
     <div class="ui">
-        <input type="color" name="color" id="color" class="color" onchange="onSetColor(value)">
-        <select name="select" id="shape-select" onchange="onSetShape(value)">
+
+        <label for="strokeColor">STROKE
+            <input type="color" 
+            id="strokeColor" 
+            class="strokeColor" 
+            onchange="onSetStrokeColor(value)">
+        </label>
+
+        <label for="fillColor">FILL
+            <input type="color" 
+            value="#FFFFFF" 
+            id="fillColor" 
+            class="fillColor" 
+            onchange="onSetFillColor(value)">
+        </label>
+
+        <label for="noFill">NO FILL
+            <input type="checkbox" 
+            id="noFill"
+            onchange="onSetIsFill(value)">
+        </label>
+
+        <label for="lineWidth">WIDTH
+            <input type="range"  
+            id="lineWidth"
+            min="1"
+            max="100"
+            value="10"
+            onchange="onSetLineWidth(value)">
+        </label>
+        
+        <label for="lineLength">LENGTH
+            <input type="range" 
+            id="lineLength"
+            min="1"
+            max="100"
+            value="10"
+            onchange="onSetLineLength(value)">
+        </label>
+
+        <select id="shape-select" onchange="onSetShape(value)">
             <option value="squares" id="squares">SQUARES</option>
             <option value="circles" id="circles">CIRCLES</option>
             <option value="triangles" id="triangles">TRIANGLES</option>
+            <option value="lines" id="lines">LINES</option>
         </select>
-        <button>SAVE</button>
-        <button>CLEAR</button>
-        <button>ABOUT</button>
+
+        <button onclick="onClearCanvas()">CLEAR</button>
+
     </div>
 
 
-    
+
     <canvas id="canvas" width="450" height="450"></canvas>
 
+    <a href="#" onclick="downloadCanvas(this)" download="canvas.jpg">Download</a>
+
+    <h1>Upload and Share Demo</h1>
+    <div class="inputs">
+        <input type="file" class="file-input btn" name="image" onchange="onImgInput(event)" />
+
+        <button class="btn" onclick="uploadImg()">Upload Image from Canvas</button>
+
+        <p class="user-msg"></p>
+        <div class="share-container"></div>
+    </div>
 
 
-
+    <script src="js/upload-service.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

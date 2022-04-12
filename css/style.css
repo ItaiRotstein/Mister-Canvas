@@ -1,0 +1,21 @@
+
+body {
+    font-family: 'Lucida Sans', sans-serif;
+    text-align: center;
+    background-color: dodgerblue;    
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background-color: #FFF;
+    cursor: crosshair;
+}
+
+.color {
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}

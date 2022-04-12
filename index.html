@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mister Canvas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="init()">
+
+     
+
+
+    <h1>Mister-Canvas</h1>
+    <div class="ui">
+        <input type="color" name="color" id="color" class="color" onchange="onSetColor(value)">
+        <select name="select" id="shape-select" onchange="onSetShape(value)">
+            <option value="squares" id="squares">SQUARES</option>
+            <option value="circles" id="circles">CIRCLES</option>
+            <option value="triangles" id="triangles">TRIANGLES</option>
+        </select>
+        <button>SAVE</button>
+        <button>CLEAR</button>
+        <button>ABOUT</button>
+    </div>
+
+
+    
+    <canvas id="canvas" width="450" height="450"></canvas>
+
+
+
+
+    <script src="js/main.js"></script>
+</body>
+</html>

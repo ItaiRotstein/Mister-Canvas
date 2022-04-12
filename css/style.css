@@ -1,8 +1,14 @@
-
 body {
     font-family: 'Lucida Sans', sans-serif;
     text-align: center;
-    background-color: dodgerblue;    
+    background-color: dodgerblue;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
 }
 
 canvas {
@@ -12,7 +18,8 @@ canvas {
     cursor: crosshair;
 }
 
-.strokeColor, .fillColor {
+.strokeColor,
+.fillColor {
     background-color: transparent;
     border: none;
     width: 40px;

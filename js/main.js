@@ -5,10 +5,12 @@ let gCtx
 let gCurrShape = 'squares'
 let gStrokeColor = '#000000'
 let gFillColor = '#FFFFFF'
-let gLineWidth = 10
+let gLineWidth = 1
 let gLength = 10
 let gIsClicked = false
-let gIsFill = false
+let gIsFill = true
+let gStartPos
+let gPencil = { x: 0, y: 0 }
 const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 
 function init() {
@@ -43,31 +45,38 @@ function addTouchListeners() {
 function onDown(ev) {
     const pos = getEvPos(ev)
     gIsClicked = true
+    gStartPos = pos
     draw(pos.x, pos.y)
 
 }
 
 function onMove(ev) {
     if (!gIsClicked) return
-
     const pos = getEvPos(ev)
+    const dx = pos.x - gStartPos.x
+    const dy = pos.y - gStartPos.y
+    movePencil(dx, dy)
+    gStartPos = pos
+
     draw(pos.x, pos.y)
 }
 
 function onUp() {
     gIsClicked = false
+    gPencil = { x: 0, y: 0 }
 
 }
 function drawLines(x, y) {
+    gCtx.lineWidth = gLineWidth
     gCtx.beginPath()
     gCtx.moveTo(x, y)
-    gCtx.lineTo(x + gLength, y + gLength)
-    gCtx.lineTo(x - gLength, y + gLength)
+    gCtx.lineTo(x + gPencil.x, y + gPencil.y)
+    gCtx.lineTo(x - gPencil.x, y - gPencil.y)
     gCtx.lineTo(x, y)
     gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
     gCtx.fillStyle = gFillColor
-    gCtx.fill()
+    if (gIsFill) gCtx.fill()
     gCtx.closePath()
 }
 
@@ -78,7 +87,7 @@ function drawSquares(x, y) {
     gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
     gCtx.fillStyle = gFillColor
-    gCtx.fillRect(x, y, gLength, gLength)
+    if (gIsFill) gCtx.fill()
     gCtx.closePath()
 }
 
@@ -89,7 +98,7 @@ function drawCircles(x, y) {
     gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
     gCtx.fillStyle = gFillColor
-    gCtx.fill()
+    if (gIsFill) gCtx.fill()
     gCtx.closePath()
 }
 
@@ -97,13 +106,13 @@ function drawTriangles(x, y) {
     gCtx.lineWidth = gLineWidth
     gCtx.beginPath()
     gCtx.moveTo(x, y)
-    gCtx.lineTo(x + gLength, y + gLength)
-    gCtx.lineTo(x - gLength, y + gLength)
+    gCtx.lineTo(x + gLength/2, y + gLength/2)
+    gCtx.lineTo(x + gLength/2, y - gLength/2)
     gCtx.lineTo(x, y)
     gCtx.strokeStyle = gStrokeColor
     gCtx.stroke()
     gCtx.fillStyle = gFillColor
-    gCtx.fill()
+    if (gIsFill) gCtx.fill()
     gCtx.closePath()
 }
 
@@ -167,6 +176,12 @@ function onSetFillColor(color) {
     gFillColor = color
 }
 
+
+function movePencil(dx, dy) {
+    gPencil.x += dx
+    gPencil.y += dy
+}
+
 function onSetIsFill() {
     if (!gIsFill) gIsFill = true
     else gIsFill = false
@@ -175,33 +190,4 @@ function onSetIsFill() {
 
 function onClearCanvas() {
     gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
-}
-
-function downloadCanvas(elLink) {
-    const data = gElCanvas.toDataURL()
-    elLink.href = data
-    elLink.download = 'my_canvas.jpg'
-}
-
-function onImgInput(ev) {
-    loadImageFromInput(ev, renderImg)
-}
-
-function loadImageFromInput(ev, onImageReady) {
-    document.querySelector('.share-container').innerHTML = ''
-    var reader = new FileReader()
-
-    reader.onload = (event) => {
-        console.log('onload');
-        var img = new Image()
-        // Render on canvas
-        img.src = event.target.result
-        img.onload = onImageReady.bind(null, img)
-    }
-    console.log('after');
-    reader.readAsDataURL(ev.target.files[0])
-}
-
-function renderImg(img) {
-    gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height);
 }
